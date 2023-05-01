@@ -14,7 +14,7 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body
 
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => { res.status(201).res.send({ data: card }) })
+    .then((card) => { res.status(201).send({ data: card }) })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Ошибка неправильных данных' })
@@ -42,7 +42,7 @@ module.exports.deleteCardById = (req, res) => {
 
 //Обработчик установки лайка на карточку
 module.exports.putLike = (req, res) => {
-  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+  Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true, runValidators: true })
     .orFail(() => { throw new NotFound })
     .then((card) => { res.status(200).send({ data: card }) })
     .catch((err) => {
