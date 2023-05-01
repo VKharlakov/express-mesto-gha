@@ -1,4 +1,5 @@
 //Файл контроллеров для маршрута '/cards'
+const NotFound = require('../errors/errors')
 const Card = require('../models/card')
 
 //Обработчик запроса списка карточек
@@ -26,6 +27,7 @@ module.exports.createCard = (req, res) => {
 //Обработчик удаления карточки
 module.exports.deleteCardById = (req, res) => {
   Card.findByIdAndDelete(req.params.cardId)
+    .orFail(() => { throw new NotFound })
     .then((card) => { res.status(200).send({ data: card }) })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -41,6 +43,7 @@ module.exports.deleteCardById = (req, res) => {
 //Обработчик установки лайка на карточку
 module.exports.putLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .orFail(() => { throw new NotFound })
     .then((card) => { res.status(200).send({ data: card }) })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -56,6 +59,7 @@ module.exports.putLike = (req, res) => {
 //Обработчик удаления лайка с карточки
 module.exports.removeLike = (req, res) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
+    .orFail(() => { throw new NotFound })
     .then((card) => { res.status(200).send({ data: card }) })
     .catch((err) => {
       if (err.name === 'NotFound') {

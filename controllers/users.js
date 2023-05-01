@@ -1,4 +1,5 @@
 //Файл контроллеров для маршрута '/users'
+const NotFound = require('../errors/errors')
 const User = require('../models/user')
 
 //Обработчик запроса списка пользователей
@@ -11,6 +12,7 @@ module.exports.getUsers = (req, res) => {
 //Обработчик запроса пользователя по _id
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
+    .orFail(() => { throw new NotFound })
     .then((user) => { res.status(200).send({ data: user }) })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -47,6 +49,7 @@ module.exports.updateUserInfo = (req, res) => {
     runValidators: true,
     upsert: true
   })
+    .orFail(() => { throw new NotFound })
     .then((user) => { res.status(200).send({ data: user }) })
     .catch((err) => {
       if (err.name === 'NotFound') {
@@ -68,6 +71,7 @@ module.exports.updateUserAvatar = (req, res) => {
     runValidators: true,
     upsert: true
   })
+    .orFail(() => { throw new NotFound })
     .then((user) => { res.status(200).send({ data: user }) })
     .catch((err) => {
       if (err.name === 'NotFound') {
