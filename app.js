@@ -41,14 +41,14 @@ app.use('*', (req, res, next) => {
 });
 
 app.use(errors())
-app.use((err, req, res, next) => {
-  if(err.statusCode) {
-    res.status(err.statusCode).send({message: err.message})
-  } else {
-    res.status(500).send({message: 'Произошла ошибка на сервере'})
-  }
+app.use((err, req, res) => {
+  const { statusCode = 500, message } = err;
 
-  next()
+  res.status(statusCode).send({
+    message: statusCode === 500
+      ? 'Произошла ошибка на сервере'
+      : { message },
+  });
 })
 
 app.listen(PORT, () => {

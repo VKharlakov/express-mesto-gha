@@ -33,7 +33,7 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => {
-      User.create({
+     return User.create({
         email: req.body.email,
         password: hash,
         name: req.body.name,
