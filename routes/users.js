@@ -1,14 +1,31 @@
 // Файл маршрутов '/users'
-
+const { celebrate, Joi } = require('celebrate');
 const router = require('express').Router();
 const {
-  getUsers, getUserById, createUser, updateUserInfo, updateUserAvatar,
+  getUsers, getUserById, updateUserInfo, updateUserAvatar, getCurrentUser
 } = require('../controllers/users');
 
 router.get('/', getUsers); // Запрос списка пользователей
-router.get('/:userId', getUserById); // Запрос пользователя по _id
-router.post('/', createUser); // Создание пользователя
-router.patch('/me', updateUserInfo); // Обновление информации пользователя
-router.patch('/me/avatar', updateUserAvatar); // Обновление аватара пользователя
+
+router.get('/me', getCurrentUser)
+
+router.get('/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().hex().length(24)
+  })
+}),getUserById); // Запрос пользователя по _id
+
+router.patch('/me', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30)
+  })
+}),updateUserInfo); // Обновление информации пользователя
+
+router.patch('/me/avatar', celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().regex(/https?:\/\/(\www\.)?[1-9a-z\-.]{1,}\w\w(\/[1-90a-z.,_@%&?+=~/-]{1,}\/?)?#?/i)
+  })
+}),updateUserAvatar); // Обновление аватара пользователя
 
 module.exports = router;
