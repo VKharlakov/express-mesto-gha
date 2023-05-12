@@ -35,8 +35,8 @@ app.post('/signup', celebrate({
 }), createUser);
 
 app.use(auth)
-app.use('/users', require('./users'));
-app.use('/cards', require('./cards'));
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 
 app.use('*', () => {
   throw new NotFound('Такой страницы не существует');
