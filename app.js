@@ -36,8 +36,8 @@ app.use(auth)
 
 app.use('/', require('./routes/index'));
 
-app.use('*', (req, res, next) => {
-  next(new NotFound('Такой страницы не существует'));
+app.use('*', () => {
+  throw new NotFound('Такой страницы не существует');
 });
 
 app.use(errors())
