@@ -18,9 +18,6 @@ mongoose.connect('mongodb://127.0.0.1/mestodb')
   .catch((err) => console.error('Ошибка подключения:', err));
 
 app.post('/signin', celebrate({
-  headers: Joi.object({
-    cookie: Joi.string().required().regex(/jwt=[\w.]/),
-  }).unknown(true),
   body: Joi.object().keys({
     email: Joi.string().required().email({ tlds: { allow: false } }),
     password: Joi.string().required(),
@@ -28,9 +25,6 @@ app.post('/signin', celebrate({
 }), login);
 
 app.post('/signup', celebrate({
-  headers: Joi.object({
-    cookie: Joi.string().required().regex(/jwt=[\w.]/),
-  }).unknown(true),
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),

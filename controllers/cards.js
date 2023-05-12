@@ -37,7 +37,7 @@ module.exports.deleteCardById = (req, res, next) => {
       if (isOwner) {
         Card.deleteOne(card)
           .then(() => { res.status(SUCCESS_CODES.success).send({ data: card }) })
-      } else { throw new Forbidden('Только автор фотографии может ее удалять') }
+      } else { throw new Forbidden('Только автор фотографии может ее удалить') }
     })
     .catch((err) => {
       if (err.name === 'CastError') {

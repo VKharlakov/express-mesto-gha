@@ -16,19 +16,19 @@ router.post('/', celebrate({
 
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
+    cardId: Joi.string().required().hex().length(24),
   }),
 }),deleteCardById); // Удаление карточки
 
 router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
+    cardId: Joi.string().required().hex().length(24),
   }),
 }),putLike); // Установка лайка
 
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
+    cardId: Joi.string().required().hex().length(24),
   }),
 }),removeLike); // Удаление лайка
 
