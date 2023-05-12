@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate')
 const { login, createUser } = require('./controllers/users')
-const { auth } = require('./middlewares/auth');
+const auth = require('./middlewares/auth');
 const NotFound = require('./errors/NotFound');
 
 const { PORT = 3000 } = process.env;
@@ -35,8 +35,8 @@ app.post('/signup', celebrate({
 }), createUser);
 
 app.use(auth)
-
-app.use('/', require('./routes/index'));
+app.use('/users', require('./users'));
+app.use('/cards', require('./cards'));
 
 app.use('*', () => {
   throw new NotFound('Такой страницы не существует');
