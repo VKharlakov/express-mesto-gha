@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate')
 const { login, createUser } = require('./controllers/users')
 const { auth } = require('./middlewares/auth');
@@ -10,6 +11,7 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cookieParser())
 
 mongoose.connect('mongodb://127.0.0.1/mestodb')
   .then(() => console.log('Успешное подключение к MongoDB'))
