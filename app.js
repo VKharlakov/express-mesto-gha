@@ -32,9 +32,7 @@ app.post('/signup', celebrate({
   })
 }), createUser);
 
-app.use(auth)
 
-app.use('/', require('./routes/index'));
 
 app.use('*', () => {
   throw new NotFound('Такой страницы не существует');
@@ -50,6 +48,10 @@ app.use((err, req, res, next) => {
 
   next()
 })
+
+app.use(auth)
+
+app.use('/', require('./routes/index'));
 
 app.listen(PORT, () => {
   console.log(`App's listening on port ${PORT}`);
