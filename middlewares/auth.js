@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token);
+    payload = jwt.verify(token, 'key');
   } catch (err) {
     return next(new Unauthorized('Не выполнена авторизация'));
   }
