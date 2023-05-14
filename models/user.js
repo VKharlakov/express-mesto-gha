@@ -3,7 +3,6 @@ const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
 const Unauthorized = require('../errors/Unauthorized');
 
-
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -39,12 +38,10 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     select: false,
-    minlength: 8,
   },
 });
 
 userSchema.statics.findUserByCredentials = function (email, password) {
-
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {

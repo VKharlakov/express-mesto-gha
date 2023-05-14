@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { celebrate, Joi, errors } = require('celebrate')
-const { login, createUser } = require('./controllers/users')
+const { celebrate, Joi, errors } = require('celebrate');
+const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFound = require('./errors/NotFound');
 
@@ -11,7 +11,7 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cookieParser())
+app.use(cookieParser());
 
 mongoose.connect('mongodb://127.0.0.1/mestodb')
   .then(() => console.log('Успешное подключение к MongoDB'))
@@ -21,7 +21,7 @@ app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email({ tlds: { allow: false } }),
     password: Joi.string().required(),
-  }).unknown(true)
+  }).unknown(true),
 }), login);
 
 app.post('/signup', celebrate({
@@ -31,27 +31,27 @@ app.post('/signup', celebrate({
     avatar: Joi.string().regex(/https?:\/\/(\www\.)?[1-9a-z\-.]{1,}\w\w(\/[1-90a-z.,_@%&?+=~/-]{1,}\/?)?#?/i),
     email: Joi.string().required().email({ tlds: { allow: false } }),
     password: Joi.string().required(),
-  }).unknown(true)
+  }).unknown(true),
 }), createUser);
 
-app.use(auth)
+app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use('*', () => {
-  throw new NotFound('Такой страницы не существует');
+app.use('*', (next) => {
+  next(new NotFound('Такой страницы не существует'));
 });
 
-app.use(errors())
+app.use(errors());
 app.use((err, req, res, next) => {
-  if(err.statusCode) {
-    res.status(err.statusCode).send({message: err.message})
+  if (err.statusCode) {
+    res.status(err.statusCode).send({ message: err.message });
   } else {
-    res.status(500).send({message: 'Произошла ошибка на сервере'})
+    res.status(500).send({ message: 'Произошла ошибка на сервере' });
   }
 
-  next()
-})
+  next();
+});
 
 app.listen(PORT, () => {
   console.log(`App's listening on port ${PORT}`);

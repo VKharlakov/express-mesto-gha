@@ -1,11 +1,8 @@
 module.exports = {
   env: {
-    browser: false,
     es2021: true,
   },
   extends: [
-    'plugin:react/recommended',
-    'airbnb',
     'airbnb-base',
   ],
   overrides: [
@@ -18,6 +15,5 @@ module.exports = {
   ],
   rules: {
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
-    'no-unused-vars': false,
   },
 };

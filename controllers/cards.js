@@ -1,8 +1,8 @@
 // Файл контроллеров для маршрута '/cards'
 const Card = require('../models/card');
 const SUCCESS_CODES = require('../utils/constants');
-const BadRequest = require('../errors/BadRequest')
-const NotFound = require('../errors/NotFound')
+const BadRequest = require('../errors/BadRequest');
+const NotFound = require('../errors/NotFound');
 const Forbidden = require('../errors/Forbidden');
 
 // Обработчик запроса списка карточек
@@ -10,7 +10,7 @@ module.exports.getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => { res.status(SUCCESS_CODES.success).send({ data: cards }); })
-    .catch(next)
+    .catch(next);
 };
 
 // Обработчик создания карточки
@@ -21,9 +21,9 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => { res.status(SUCCESS_CODES.created).send({ data: card }); })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequest('Неверный формат введенных данных'))
+        next(new BadRequest('Неверный формат введенных данных'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -33,17 +33,17 @@ module.exports.deleteCardById = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => { throw new NotFound('Такой фотографии не существует'); })
     .then((card) => {
-      const isOwner = req.user._id === card.owner.toString()
+      const isOwner = req.user._id === card.owner.toString();
       if (isOwner) {
-        Card.deleteOne(card)
-          .then(() => { res.status(SUCCESS_CODES.success).send({ data: card }) })
-      } else { throw new Forbidden('Только автор фотографии может ее удалить') }
+        return Card.deleteOne(card)
+          .then(() => { res.status(SUCCESS_CODES.success).send({ data: card }); });
+      } throw new Forbidden('Только автор фотографии может ее удалить');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequest('Неверный формат введенных данных'))
+        next(new BadRequest('Неверный формат введенных данных'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -56,9 +56,9 @@ module.exports.putLike = (req, res, next) => {
     .then((card) => { res.status(SUCCESS_CODES.success).send({ data: card }); })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequest('Неверный формат введенных данных'))
+        next(new BadRequest('Неверный формат введенных данных'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -70,9 +70,9 @@ module.exports.removeLike = (req, res, next) => {
     .then((card) => { res.status(SUCCESS_CODES.success).send({ data: card }); })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequest('Неверный формат введенных данных'))
+        next(new BadRequest('Неверный формат введенных данных'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
